@@ -1,6 +1,0 @@
-@MyApplicationRestNetCore_HostAddress = http://localhost:5145
-
-GET {{MyApplicationRestNetCore_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
