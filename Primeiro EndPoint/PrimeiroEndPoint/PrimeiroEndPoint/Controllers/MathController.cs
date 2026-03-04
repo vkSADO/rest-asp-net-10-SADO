@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace PrimeiroEndPoint.Controllers
 {
@@ -10,12 +11,31 @@ namespace PrimeiroEndPoint.Controllers
         [HttpGet("sum/{var1}/{var2}")]
         public IActionResult Get(string var1, string var2)
         {
-            if(var1 == "1" && var2 == "1")
+            if(IsNumeric(var1) && IsNumeric(var2))
             {
-                return Ok("1");
+                var sum = ConvertToDecimal(var1) + ConvertToDecimal(var2);
+                return Ok(sum);
             }
            
             return BadRequest("Deu erro!"); 
+        }
+
+        private decimal ConvertToDecimal(string var)
+        {
+            decimal value;
+           if(decimal.TryParse(var, NumberStyles.Any,NumberFormatInfo.InvariantInfo,out value))
+           {
+                return value;
+
+           }
+            return 0;
+        }
+
+        private bool IsNumeric(string var)
+        {
+            decimal result;
+            bool isNumeric = decimal.TryParse(var, NumberStyles.Any,NumberFormatInfo.InvariantInfo,out  result);
+            return isNumeric;
         }
     }
 }
