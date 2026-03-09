@@ -9,33 +9,76 @@ namespace PrimeiroEndPoint.Controllers
     public class MathController : ControllerBase
     {
         [HttpGet("sum/{var1}/{var2}")]
-        public IActionResult Get(string var1, string var2)
+        public IActionResult Sum(string var1, string var2)
         {
-            if(IsNumeric(var1) && IsNumeric(var2))
-            {
-                var sum = ConvertToDecimal(var1) + ConvertToDecimal(var2);
-                return Ok(sum);
-            }
-           
-            return BadRequest("Deu erro!"); 
-        }
-
-        private decimal ConvertToDecimal(string var)
-        {
-            decimal value;
-           if(decimal.TryParse(var, NumberStyles.Any,NumberFormatInfo.InvariantInfo,out value))
+           if(!TryConvertToDecimal(var1,out var n1) || !TryConvertToDecimal(var2, out var n2))
            {
-                return value;
-
+                return BadRequest(); 
            }
-            return 0;
+            return Ok(n1 + n2);
         }
 
-        private bool IsNumeric(string var)
+        [HttpGet("sub/{var1}/{var2}")]
+        public IActionResult Sub(string var1, string var2)
         {
-            decimal result;
-            bool isNumeric = decimal.TryParse(var, NumberStyles.Any,NumberFormatInfo.InvariantInfo,out  result);
-            return isNumeric;
+            if (!TryConvertToDecimal(var1, out var n1) || !TryConvertToDecimal(var2, out var n2))
+            {
+                return BadRequest();
+            }
+            return Ok(n1 - n2);
         }
+
+        [HttpGet("mult/{var1}/{var2}")]
+        public IActionResult Mult(string var1, string var2)
+        {
+            if(!TryConvertToDecimal(var1, out var n1) || !TryConvertToDecimal(var2, out var n2))
+            {
+                return BadRequest();
+            }
+            return Ok(n1 * n2);
+        }
+
+        [HttpGet("div/{var1}/{var2}")]
+        public IActionResult Div(string var1, string var2)
+        {
+            if (!TryConvertToDecimal(var1, out var n1) || !TryConvertToDecimal(var2, out var n2))
+            {
+                return BadRequest();
+            }
+            return Ok(n1 / n2);
+        }
+
+        [HttpGet("mid/{var1}/{var2}")]
+        public IActionResult Mid(string var1, string var2)
+        {
+            if (!TryConvertToDecimal(var1, out var n1) || !TryConvertToDecimal(var2, out var n2))
+            {
+                return BadRequest();
+            }
+            return Ok((n1 + n2)/2);
+        }
+
+        [HttpGet("sqrt/{var1}")]
+        public IActionResult Sqrt(string var1)
+        {
+            if (!TryConvertToDecimal(var1, out var n1))
+            {
+                return BadRequest();
+            }
+            var result = (Math.Sqrt((double)n1));
+            return Ok(Math.Round(result,2));
+        }
+
+
+
+        // Metodo que converte string para um valor decimal
+        private bool TryConvertToDecimal(string input, out decimal value)
+        {
+
+            return decimal.TryParse(input, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out value);
+          
+        }
+
+        
     }
 }
